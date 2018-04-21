@@ -1,8 +1,7 @@
 #pragma once
-#include "Triangle.h"
+#include "Mesh.h"
 #include "Shading/Light.h"
 
-#include <vector>
 
 class Ray;
 class Intersection;
@@ -13,7 +12,7 @@ public:
   Scene();
   ~Scene();
 
-  void AddTriangle(const Triangle& tri);
+  void AddMesh(const Mesh& tri);
 
   void Optimize();
 
@@ -27,7 +26,7 @@ public:
   }
 
 private:
-  std::vector<Triangle> tris;
+  std::vector<Mesh> meshes;
   std::vector<Light> lights;
 };
 

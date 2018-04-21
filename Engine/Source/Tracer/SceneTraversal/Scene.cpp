@@ -8,10 +8,11 @@ Scene::~Scene()
 {
 }
 
-void Scene::AddTriangle(const Triangle & tri)
+void Scene::AddMesh(const Mesh & mesh)
 {
-  tris.push_back(tri);
+  meshes.push_back(mesh);
 }
+
 
 void Scene::Optimize()
 {
@@ -20,7 +21,7 @@ void Scene::Optimize()
 bool Scene::Intersect(Ray & ray, Intersection & hit)
 {
   bool intersected = false;
-  for (std::vector<Triangle>::iterator it = tris.begin(); it != tris.end(); ++it)
+  for (std::vector<Mesh>::iterator it = meshes.begin(); it != meshes.end(); ++it)
   {
     intersected |= it->Intersect(ray, hit);
   }
@@ -29,7 +30,7 @@ bool Scene::Intersect(Ray & ray, Intersection & hit)
 
 bool Scene::IntersectShadow(Ray & ray)
 {
-  for (std::vector<Triangle>::iterator it = tris.begin(); it != tris.end(); ++it)
+  for (std::vector<Mesh>::iterator it = meshes.begin(); it != meshes.end(); ++it)
   {
     if (it->IntersectShadow(ray))
     {

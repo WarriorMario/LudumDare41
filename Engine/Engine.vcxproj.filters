@@ -55,6 +55,10 @@
     <ClInclude Include="Source\Tracer\Utilities\Timer.h" />
     <ClInclude Include="Source\Tracer\Shading\FColor.h" />
     <ClInclude Include="Source\Tracer\SceneTraversal\Intersection.h" />
+    <ClInclude Include="Source\Tracer\SceneTraversal\Mesh.h" />
+    <ClInclude Include="Source\Tracer\UtahTeapot.h" />
+    <ClInclude Include="Source\Tracer\Math\Transform.h" />
+    <ClInclude Include="Source\Tracer\SceneTraversal\AABB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Game.cpp">
@@ -91,6 +95,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Tracer\Shading\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tracer\SceneTraversal\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tracer\Math\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tracer\SceneTraversal\AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

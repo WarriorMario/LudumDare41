@@ -37,3 +37,8 @@
 /.vs/LudumDare41/v15/Browse.VC.db
 /Engine/x64/Debug/Engine.tlog
 /Engine/x64/Debug
+*.ipch
+*.tlog
+*.iobj
+*.ipdb
+*.res
