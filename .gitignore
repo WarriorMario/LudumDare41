@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+/.vs/Chili Framework 2016/v15/Browse.VC.db
+/.vs/Chili Framework 2016/v15/Browse.VC.opendb
+/.vs/Chili Framework 2016/v15/.suo
+/.vs/LudumDare41/v15/.suo
+/.vs/LudumDare41/v15/Browse.VC.db
+/Engine/x64/Debug/Engine.tlog
+/Engine/x64/Debug
