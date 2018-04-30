@@ -49,6 +49,8 @@ void Game::Load()
 #include "UtahTeapot.h"
 #undef _WIN32_WCE
 
+  Mesh teapot;
+  teapot.SetTransform(Transform::CreateTranslate(Vec3(kZeroF)));
   for (int32 i = 0; i < numFaces; ++i)
   {
     int32 vIndex = 0;
@@ -73,8 +75,9 @@ void Game::Load()
         vertices[faces[i][j]][0] + Float(4.5)) / Float(9.643),
         vertices[faces[i][j]][1] / Float(4.725));
     }
-    scene_.AddTriangle(Triangle(p, n, uv, FColors::White));
+    teapot.AddTriangle(Triangle(p, n, uv, FColors::White));
   }
+  scene_.AddMesh(teapot);
 }
 
 void Game::Optimize()

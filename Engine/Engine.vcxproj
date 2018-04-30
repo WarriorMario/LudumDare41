@@ -212,6 +212,9 @@
     <Image Include="Chili.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Tracer\Math\Transform.h" />
+    <ClInclude Include="Source\Tracer\SceneTraversal\AABB.h" />
+    <ClInclude Include="Source\Tracer\SceneTraversal\Mesh.h" />
     <ClInclude Include="Source\Tracer\SceneTraversal\Intersection.h" />
     <ClInclude Include="Source\Tracer\Shading\FColor.h" />
     <ClInclude Include="Source\Tracer\Shading\Light.h" />
@@ -233,10 +236,14 @@
     <ClInclude Include="Source\Tracer\Math\Vec3.h" />
     <ClInclude Include="Source\Tracer\Typedefs.h" />
     <ClInclude Include="Source\Tracer\SceneTraversal\Triangle.h" />
+    <ClInclude Include="Source\Tracer\UtahTeapot.h" />
     <ClInclude Include="Source\Tracer\Utilities\ParallelForLoop.h" />
     <ClInclude Include="Source\Tracer\Utilities\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Tracer\Math\Transform.cpp" />
+    <ClCompile Include="Source\Tracer\SceneTraversal\AABB.cpp" />
+    <ClCompile Include="Source\Tracer\SceneTraversal\Mesh.cpp" />
     <ClCompile Include="Source\Tracer\SceneTraversal\Scene.cpp" />
     <ClCompile Include="Source\Chili\DXErr.cpp" />
     <ClCompile Include="Source\Chili\Graphics.cpp" />
