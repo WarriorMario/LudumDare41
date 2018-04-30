@@ -53,9 +53,10 @@ bool Triangle::Intersect(Ray& ray, Mesh* mesh, Result& result)
   float b0 = 1.0f - b1 - b2;
 
   ray.len = t;
-  result.bary_coords = vec3(b0, b1, b2);
+  result.baryCoords = vec3(b0, b1, b2);
   result.tri = this;
   result.mesh = mesh;
+  result.norm = GetNormalAtB( result.baryCoords );
 
   return true;
 }

@@ -15,11 +15,17 @@ public:
     g(col.g),
     b(col.b)
   {}
-  FColor(float value)
+  explicit FColor(float value)
     :
     r(value),
     g(value),
     b(value)
+  {}
+  explicit FColor( uint value )
+    :
+    r( ((value & 0x00ff0000) >> 16) / 255.f),
+    g( ((value&0x0000ff00)  >> 8) / 255.f),
+    b( (value&0x000000ff) / 255.f )
   {}
   FColor(float red, float green, float blue)
     :
@@ -204,10 +210,10 @@ public:
 
   Pixel To32Bit() const
   {
-    Pixel res = 0x000000ff;
-    res |= (unsigned char)(r * 255) << 24;
-    res |= (unsigned char)(g * 255) << 16;
-    res |= (unsigned char)(b * 255) << 8;
+    Pixel res = 0xff000000;
+    res |= (unsigned char)(r * 255) << 16;
+    res |= (unsigned char)(g * 255) << 8;
+    res |= (unsigned char)(b * 255);
     return res;
   }
 

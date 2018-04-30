@@ -421,6 +421,10 @@ SGNode* Scene::LoadOBJ( const char* file, const float _Scale )
         current->bvhIndex = bvhList.size();
         bvhList.push_back( bvhs[0] );
         bvhs.erase( bvhs.begin() );
+        if ( bvhList.size() < 1 )
+        {
+          nextMesh->material->diffuse = 0;
+        }
       }
 			// clean up
 			while (unique.size() > vlist.size()) unique.pop_back(); 

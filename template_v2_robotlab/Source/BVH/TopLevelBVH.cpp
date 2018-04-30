@@ -270,6 +270,7 @@ bool TopLevelBVH::Node::Traverse(TopLevelBVH& bvh, Ray& ray, Result& result)
         {
           intersects = true;
           ray.len = r.len;
+          result.norm = (bvh.transforms[i] * vec4( result.norm, 0 )).xyz;
         }
       }
       return intersects;

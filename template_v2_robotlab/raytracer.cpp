@@ -43,7 +43,7 @@ bool Tmpl8::Raytracer::IsOccluded(Ray & ray)
 void Tmpl8::Raytracer::Render( Camera & camera )
 {
   RenderJob::InitData( this, camera );
-  ParallelFor( func, SCRWIDTH*SCRHEIGHT / packetSize, 2 );
+  ParallelFor( func, SCRWIDTH*SCRHEIGHT / packetSize, 20000000 );
 }
 
 RenderJob::RenderJobData RenderJob::data;
@@ -59,6 +59,47 @@ void Tmpl8::RenderJob::InitData( Raytracer* tracer, Camera& camera )
   data.p1 = data.camPos + ( camera.transform*vec4( 1, 1, -screenDistance, 0 ) ).xyz;
   data.p2 = data.camPos + ( camera.transform*vec4( -1, -1, -screenDistance, 0 ) ).xyz;
   data.raytracer = tracer;
+}
+thread_local static int randints;
+
+vec3 DiffuseReflection(vec3 norm)
+{
+  vec3 point = vec3( ( ( rand() ) - RAND_MAX / 2 ) / (RAND_MAX / 2.f), ( ( rand() ) - RAND_MAX / 2 ) / (RAND_MAX / 2.f), ( ( rand() ) - RAND_MAX / 2 ) / (RAND_MAX / 2.f ));
+  while ( point.sqrLentgh() > 1.0f )
+  {
+    point = vec3( ( ( rand() ) - RAND_MAX / 2 ) / ( RAND_MAX / 2.f ), ( ( rand() ) - RAND_MAX / 2 ) / ( RAND_MAX / 2.f ), ( ( rand() ) - RAND_MAX / 2 ) / ( RAND_MAX / 2.f ) );
+  }
+  point.normalize();
+  if ( dot( norm, point ) < 0.f )
+  {
+    return -point;
+  }
+  return point;
+}
+FColor Sample( RenderJob::RenderJobData& data, Ray& ray, Result& res, int maxDepth)
+{
+  if ( maxDepth == 4 )
+  {
+    return FColor( 0XAAAAAAAu );
+  }
+  if ( data.raytracer->Trace( ray, res ) == true )
+  {
+    if ( res.mesh->material->diffuse == 0 )
+    {
+      return FColor( 0xffffffff );
+    }
+    vec3 reflected = DiffuseReflection( res.norm );
+    FColor BRDF( FColor(0x000000ffu ));// Get colour from texture
+    BRDF /= PI;
+    vec3 hitpoint = ray.pos + ray.dir * ray.len;
+    vec3 norm = res.norm;
+    hitpoint += reflected * EPSILON;
+    Ray newRay = Ray( hitpoint, reflected, 100000.f );
+    FColor color = Sample( data, newRay, res , maxDepth +1) * dot( norm, reflected );
+    return BRDF * PI * 2.f*color;
+  
+  }
+  return FColor(0X00000000u);
 }
 
 void Tmpl8::RenderJob::RenderTile( int index )
@@ -76,40 +117,8 @@ void Tmpl8::RenderJob::RenderTile( int index )
       Ray ray = Ray( data.camPos, rayDirection.normalized(), 10000000.0f );
 
       Result res;
-      if ( data.raytracer->Trace( ray, res ) )
-      {
-        vec3 pos = res.tri->GetPosAtB( res.bary_coords );
-        vec3 norm = res.tri->GetNormalAtB( res.bary_coords );
+      data.raytracer->m_screen->GetBuffer()[y*SCRWIDTH + x] = Sample( data, ray, res ,0).To32Bit();
 
-        vec3 hitpoint = ray.pos + ray.dir * ray.len;
-        vec3 lightDir = data.raytracer->m_light.pos - hitpoint;
-        hitpoint += norm * EPSILON;
-        float length = lightDir.length();
-        lightDir *= 1.0f / length;
-        Ray shadow = Ray( hitpoint, lightDir, length );
-        if ( data.raytracer->IsOccluded( shadow ) == false )
-        {
-          FColor li = data.raytracer->m_light.GetLightAtPoint( pos );
-          float d = dot( norm, shadow.dir );
-          if ( d < 0.f )
-          {
-            data.raytracer->m_screen->GetBuffer()[y*SCRWIDTH + x] = ( li * 0.0f ).To32Bit();
-          }
-          else
-          {
-            data.raytracer->m_screen->GetBuffer()[y*SCRWIDTH + x] = ( li * d ).To32Bit();
-
-          }
-        }
-        else
-        {
-          data.raytracer->m_screen->GetBuffer()[y*SCRWIDTH + x] = 0xaaaaaaaa;
-        }
-      }
-      else
-      {
-        data.raytracer->m_screen->GetBuffer()[y*SCRWIDTH + x] = 0;
-      }
     }
   }
 }

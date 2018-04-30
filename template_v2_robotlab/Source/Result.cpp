@@ -4,6 +4,6 @@ Result::Result()
   :
   mesh(nullptr),
   tri(nullptr),
-  bary_coords(vec3(0.0f, 0.0f, 0.0f))
+  baryCoords(vec3(0.0f, 0.0f, 0.0f))
 {
 }

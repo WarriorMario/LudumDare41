@@ -35,7 +35,6 @@ public:
   static void InitData(Raytracer* raytracer, Camera & camera );
   static void RenderTile( int index );
 
-private:
   // Shared job data
   static struct RenderJobData
   {

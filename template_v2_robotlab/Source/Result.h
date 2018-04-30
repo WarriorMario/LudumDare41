@@ -9,6 +9,8 @@ class Result
 public:
   Result();
   Mesh* mesh;
+  Material mat;
   Triangle* tri;
-  vec3 bary_coords;
+  vec3 baryCoords;
+  vec3 norm;
 };
