@@ -75,7 +75,8 @@ bool DynamicBVH::TraverseShadow( Ray & ray )
 
 AABB DynamicBVH::GetAABB()
 {
-  return m_nodes[0].aabb;
+  //return m_nodes[0].aabb;
+  return AABB(m_nodes[0].bmin, m_nodes[0].bmax);
 }
 
 void DynamicBVH::Serialize( FILE * file )
@@ -178,7 +179,11 @@ void DynamicBVH::Node::Subdivide( DynamicBVH & bvh, size_t depth )
 {
   bvh.m_maxDepth = MAX( bvh.m_maxDepth, depth );
   // Calculate the new bounds
-  aabb = bvh.CalculateAABB( firstLeft, count );
+  //aabb = bvh.CalculateAABB(firstLeft, count);
+  AABB aabb = bvh.CalculateAABB( firstLeft, count );
+  bmin = aabb.min;
+  bmax = aabb.max;
+
   // Quit when we reached the Minimum amount of primitives
   if ( count < primPerNode )
     return;
@@ -238,7 +243,7 @@ void DynamicBVH::Node::Subdivide( DynamicBVH & bvh, size_t depth )
 bool DynamicBVH::Node::Traverse( DynamicBVH& bvh, Mesh* mesh, Result& result, Ray & ray )
 {
   // check if the ray intersects this Node
-  if ( aabb.Intersect( ray ) )
+  if ( Intersect( ray ) )
   {
     // check if you're a leaf node
     if ( count > 0 )
@@ -263,10 +268,22 @@ bool DynamicBVH::Node::Traverse( DynamicBVH& bvh, Mesh* mesh, Result& result, Ra
   return false;
 }
 
+bool DynamicBVH::Node::Intersect(Ray & ray)
+{
+  __m128 t1 = _mm_mul_ps(_mm_sub_ps(bmin4, ray.O4), ray.rD4);
+  __m128 t2 = _mm_mul_ps(_mm_sub_ps(bmax4, ray.O4), ray.rD4);
+  __m128 vmax4 = _mm_max_ps(t1, t2), vmin4 = _mm_min_ps(t1, t2);
+  float* vmax = (float*)&vmax4, *vmin = (float*)&vmin4;
+  float tmax = MIN(vmax[0], MIN(vmax[1], vmax[2]));
+  float tmin = MAX(vmin[0], MAX(vmin[1], vmin[2]));
+  return tmax >= tmin && tmax >= 0;
+  //return false;
+}
+
 bool DynamicBVH::Node::TraverseShadow( DynamicBVH & bvh, Ray & ray )
 {
   // check if the ray intersects this Node
-  if ( aabb.Intersect( ray ) )
+  if ( Intersect( ray ) )
   {
     // check if you're a leaf node
     if ( count > 0 )

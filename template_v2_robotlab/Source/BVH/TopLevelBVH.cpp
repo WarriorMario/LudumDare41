@@ -260,10 +260,11 @@ bool TopLevelBVH::Node::Traverse(TopLevelBVH& bvh, Ray& ray, Result& result)
       bool intersects = false;
       for (int i = firstLeft; i < lastPrim; ++i)
       {
-        Ray r = ray;
-        // transform ray to mesh space
-        r.dir = (bvh.invertedTransforms[i] * vec4(ray.dir, 0)).xyz;
-        r.pos = (bvh.invertedTransforms[i] * vec4(ray.pos, 1)).xyz;
+        // create a new ray in mesh space
+        Ray r = Ray(
+          (bvh.invertedTransforms[i] * vec4(ray.pos, 1)).xyz,
+          (bvh.invertedTransforms[i] * vec4(ray.dir, 0)).xyz,
+          INFINITY);
 
         // intersect the bvh in its own space
         if (bvh.bvhList[i]->Traverse(bvh.meshes[i], result, r))
@@ -297,10 +298,11 @@ bool TopLevelBVH::Node::TraverseShadow(TopLevelBVH & bvh, Ray & ray)
       const int lastPrim = firstLeft + count;
       for (int i = firstLeft; i < lastPrim; ++i)
       {
-        Ray r = ray;
-        // transform ray to mesh space
-        r.dir = (bvh.invertedTransforms[i] * vec4(ray.dir, 0)).xyz;
-        r.pos = (bvh.invertedTransforms[i] * vec4(ray.pos, 1)).xyz;
+        // create a new ray in mesh space
+        Ray r = Ray(
+          (bvh.invertedTransforms[i] * vec4(ray.pos, 1)).xyz,
+          (bvh.invertedTransforms[i] * vec4(ray.dir, 0)).xyz,
+          INFINITY);
 
         // intersect the bvh in its own space
         if (bvh.bvhList[i]->TraverseShadow(r))
