@@ -37,3 +37,7 @@
 /.vs/LudumDare41/v15/Browse.VC.db
 /Engine/x64/Debug/Engine.tlog
 /Engine/x64/Debug
+/template_v2_robotlab/Debug
+/template_v2_robotlab/documentation
+/template_v2_robotlab/Release
+/template_v2_robotlab/assets
